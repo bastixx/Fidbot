@@ -24,6 +24,7 @@ Commands can be found here: https://pastebin.com/yitr7Ds0
 ----------------------------------------
 Notes:
 
+- Requires the python library 'Validators'
 
 ----------------------------------------
 Upcoming features:
