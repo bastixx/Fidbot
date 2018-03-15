@@ -19,23 +19,7 @@ The winner is the one with the closest bet, with a maximum of 5 minutes. If Fid 
 ----------------------------------------
 Commands:
 
-!brokenboner			      - Explanation of the game
-!bonercommands 			      - Bot command list
-!currentboner 		    	  - Current onwer of the title "Broken Boner"
-!timer 				          - The current time on the timer
-!bet <number of minutes> 	  - Enter the pool with the number of minutes specified
-!mybet				          - Displays your current bet
-!betstats			          - Displays the lowest, highest and average of the bets and the number of people betting
-!bonermods		           	  - Current authorised users
-
-Authorised users only:
-!setboner <name> 		      - Changes the current title holder to <name>
-!openbets 		              - Allows the chat to start betting
-!starttimer		           	  - Starts the timer and closes the betting
-!stopttimer		          	  - Stops the timer
-!closebets	          		  - Stops people from using !bet
-!adduser <name>			      - Adds a user to the list of authorised users
-!removeuser <name> 		      - Removes a user from the list of authorised users
+Commands can be found here: https://pastebin.com/yitr7Ds0
 
 ----------------------------------------
 Notes:
