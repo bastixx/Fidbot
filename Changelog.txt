@@ -1,0 +1,79 @@
+14-3-2018
+- Finished !addquote and !quote command
+- Finally fixed splitting of tags
+
+-----------------
+13-3-2018
+- Started on !addquote and !quote command
+- Moved read from files to function
+- Improved errorlogging
+
+-----------------
+11-3-2018
+- Added message when using !bet without arguments
+- Added !winner command
+- Changed !bet command so show when bets are updated
+
+-----------------
+8-3-2018
+- Upgraded to Python 3.6.4
+- Fixed things broken due to python version upgrade.
+
+-----------------
+5-3-2018
+- Finished permit system
+- Added commands to enable and disable permit system
+- Added random endings to announcer messages
+- Added command to add a ending (!addending)
+- Mucho text fixes/changes
+- Changed !timer command back to using datetime
+- 
+
+----------------
+3-2-2018
+- Started on permit system for links
+- Added tag loading command for users
+- Added ismod and issub to checks
+
+----------------
+28-2-2018
+- Changed !stoptime to work with new timer
+- Added announce feature
+
+----------------
+27-2-2018
+- Changed the way timer works
+- Timer now supports seconds! (bets do NOT yet)
+- Added a main function
+- Possibly broke (a lot of) things
+
+----------------
+19-2-2018
+- Changed modnames to lowercase (this fixes the authorised users issue)
+- Changed the !adduser and !removeuser commands to implement above change
+- Added the alias !rembet and !remuser
+- Fixed disconnecting issue (Code was wrong)
+- Added automessage on ping (~5 mins) if bets are opened
+- Added autosave for bets on ping
+- Added !boneridea command
+- Changed !bonercommands to link to a pastebin
+- Added alias !bets for !betstats
+- Changed so that there can be multiple winners
+
+----------------
+18-2-2018
+- Added !resettimer
+- Added !clearbets
+- Added !addbet
+- Added !removebet
+- Added write to file for bets on ping
+- Added import bets from file on startup
+- Added try to import on startup
+- Fixed average rounding
+- Fixed highest and lowest displaying incorrectly
+- Made Fid not win if no bets within 5 mins of dying
+
+----------------
+
+
+----------------
