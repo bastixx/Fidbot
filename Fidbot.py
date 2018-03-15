@@ -1,5 +1,5 @@
 # Python 3.6
-# Author: twitch.tv/bastixx669
+# Author: twitch.tv/bastixx669 Github.com/bastixx
 # based on a tutorial found here: https://www.youtube.com/watch?v=5Kv3_V5wFgg by Cynigo
 #
 # Created as a learning project for a small Twitch community!
@@ -18,10 +18,8 @@ from inspect import currentframe, getframeinfo
 HOST = "irc.twitch.tv"
 NICK = b"testbot"
 PORT = 6667
-PASS = b"oauth:***REMOVED***"
-CHANNEL = b'fideliasfk'
-
-# fideliasfk
+PASS = b"<INSERT OATH TOKEN>"
+CHANNEL = b'<INSERT CHANNEL>'
 
 # For debugging purposes
 printline = False
