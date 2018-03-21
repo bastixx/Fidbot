@@ -1,48 +1,58 @@
 # Python 3.6
-# Author: twitch.tv/bastixx669 Github.com/bastixx
+# Author: twitch.tv/bastixx669 github.com/bastixx
 # based on a tutorial found here: https://www.youtube.com/watch?v=5Kv3_V5wFgg by Cynigo
 #
 # Created as a learning project for a small Twitch community!
 
 import socket
 import numbers
-import string
 import time
 import threading
 import random
-import validators  # Needs installation!
+import configparser
 from datetime import datetime, date
 from inspect import currentframe, getframeinfo
 
-# Set all the variables necessary to connect to Twitch IRC
-HOST = "irc.twitch.tv"
-NICK = b"testbot"
-PORT = 6667
-PASS = b"<INSERT OATH TOKEN>"
-CHANNEL = b'<INSERT CHANNEL>'
+# Load all the variables necessary to connect to Twitch IRC from a seperate file
+config = configparser.ConfigParser()
+config.read('Config.ini')
+settings = config['Settings']
+
+HOST = settings['host']
+NICK = b"%s" % settings['Nickname'].encode()
+PORT = int(settings['port'])
+PASS = b"%s" % settings['Password'].encode()
+CHANNEL = b"%s" % settings['Channel'].encode()
 
 # For debugging purposes
-printline = False
-printparts = False
+debug = config['Debug']
+printmessage = debug.getboolean('Print message')
+printline = debug.getboolean('Print line')
+printparts = debug.getboolean('Print tags')
 
 # Connecting to Twitch IRC by passing credentials and joining a certain channel
 s = socket.socket()
 s.connect((HOST, PORT))
 s.send(b"PASS " + PASS + b"\r\n")
 s.send(b"NICK " + NICK + b"\r\n")
-s.send(b"JOIN #" + CHANNEL + b"\r\n")
 # Sending a command to make twitch return tags with each message
 s.send(b"CAP REQ :twitch.tv/tags \r\n")
+s.send(b"JOIN #" + CHANNEL + b"\r\n")
+
 
 
 def read_files():
-    global randomendings; global permitsystem; global authorisedusers; global bets; global timers
+    global randomendings; global authorisedusers; global bets; global timers
     try:
+        # Create all files if they do not exist
+        # files = ['Endings', 'AuthUsers', 'Quotes', 'Bets', 'Ideas', 'Errorlog', 'PrevWinners', 'Titleholder', 'PrevBets']
+        # for i in files:
+        #     with open(i + '.txt', 'a'):
+        #         pass
+
         with open('Endings.txt') as f:
             randomendings = f.readlines()
             randomendings = [x.strip('\n') for x in randomendings]
-        with open('Permitsystem.txt') as f:
-            permitsystem = f.read()
         with open('AuthUsers.txt') as f:
             authorisedusers = f.read().splitlines()
         with open('Quotes.txt') as f:
@@ -65,7 +75,8 @@ def read_files():
 # Method for sending messages to the Twitch channel
 def send_message(message):
     s.send(b"PRIVMSG #%s :%s\r\n" % (CHANNEL, message.encode()))
-    print(">>BOT : " + message)
+    if printmessage:
+        print(">>BOT : " + message)
 
 
 def announcer(displayname, bettime):
@@ -90,12 +101,6 @@ def errorlog(error, functionname):
         #         str(error) + "\n")
 
 
-def permit(user):
-    global permitted
-    permitted.remove(user)
-    print("%s removed from permitted" % user)
-
-
 def command_limiter(command):
     global comlimits
     comlimits.remove(command)
@@ -106,11 +111,9 @@ def main():
     global timeractive
     global bets
     global timers
-    global permitted
     global randomendings
     global comlimits
     global quotes
-    global permitsystem
     # Setting of a lot of variables
     readbuffer = ""
     modt = False
@@ -119,7 +122,6 @@ def main():
     timercount = False
     timers = {}
     bets = {}
-    permitted = []
     comlimits = []
     quotes = {}
 
@@ -198,14 +200,8 @@ def main():
                         except Exception as errormsg:
                             errorlog(errormsg, "issub/ismod")
 
-                        print(displayname + ": " + message)
-
-                        # Permit system: Prevent links if activated unless permitted, subbed or a mod.
-                        if validators.url("http://" + message) and validators.url("http://www." + message) \
-                                and permitsystem == 'True':
-                            if username not in permitted or issub or ismod:
-                                send_message("/timeout " + displayname + " 1")
-                                send_message("Please ask permission before posting links.")
+                        if printmessage:
+                            print(displayname + ": " + message)
 
                         # filters commands for efficiency
                         if message[0] == '!':
@@ -620,7 +616,7 @@ def main():
                                         keyword = "!remuser "
                                     olduser = (message[message.index(keyword) + len(keyword):])
                                     olduserlow = olduser.lower()
-                                    if olduser.length() == 0:
+                                    if len(olduser) == 0:
                                         send_message("Use !remuser <name> to remove that person from the authorised users.")
                                     if olduserlow in authorisedusers:
                                         authorisedusers.remove(olduserlow)
@@ -649,26 +645,7 @@ def main():
                                     print("Error: " + str(errormsg))
                                     errorlog(errormsg, message)
 
-                            elif message == '!permitted':
-                                if permitted:
-                                    permittedstr = ", ".join(permitted)
-                                    send_message("Permitted users are: %s" % permittedstr)
-                                else:
-                                    send_message("No permitted users at this time.")
-
-                            elif "!permit" in message and (issub or ismod or (username in permitted) or username == 'bastixx669'):
-                                try:
-                                    keyword = "!permit "
-                                    permituser = message[message.index(keyword) + len(keyword):]
-                                    permitted.append(permituser.lower())
-                                    threading.Timer(60.0, permit, [permituser]).start()
-                                    send_message("Permitted " + permituser + " to post links for 1 minute.")
-                                except Exception as errormsg:
-                                    send_message("There was an error permitting this user!")
-                                    print("Error: " + str(errormsg))
-                                    errorlog(errormsg, message)
-
-                            elif "!addending" in message and (username in permitted or issub or ismod):
+                            elif "!addending" in message and (issub or ismod):
                                 try:
                                     keyword = "!addending "
                                     newending = message[message.index(keyword) + len(keyword):]
@@ -706,8 +683,6 @@ def main():
                                 except:
                                     send_message("This quote does not exist!")
 
-
-
                             # Testing commands:
                             elif username == 'bastixx669':
                                 if message == '!createthread':
@@ -725,18 +700,6 @@ def main():
                                 elif message == '!cleartimers':
                                     bets = {}
                                     timers.clear()
-
-                                elif message == '!permsyson':
-                                    permitsystem = 'True'
-                                    with open('Permitsystem.txt', 'w')as f:
-                                        f.write(str(permitsystem))
-                                    send_message("Permit system enabled")
-
-                                elif message == '!permsysoff':
-                                    permitsystem = 'False'
-                                    with open('Permitsystem.txt', 'w')as f:
-                                        f.write(str(permitsystem))
-                                    send_message("Permit system disabled")
 
                                 elif message == '!savebets':
                                     with open("Bets.txt", 'w') as f:

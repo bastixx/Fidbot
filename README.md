@@ -24,8 +24,6 @@ Commands can be found here: https://pastebin.com/yitr7Ds0
 ----------------------------------------
 Notes:
 
-- Requires the python library 'Validators'
-
 ----------------------------------------
 Upcoming features:
 
@@ -34,5 +32,3 @@ Upcoming features:
 
 ----------------------------------------
 Known bugs:
-
-- The bot seems to stop working after a certain amount of inactivity (~10 minutes). As of now i have no idea why this happens...

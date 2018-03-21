@@ -1,3 +1,9 @@
+21-3-2018
+- Removed permit system. (Was not working correctly and too lazy to fix)
+- automatically creates files if they do not exist
+- Added config file + parser for easier editing of configurations
+
+-----------------
 14-3-2018
 - Finished !addquote and !quote command
 - Finally fixed splitting of tags
